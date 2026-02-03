@@ -1,0 +1,1803 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI для Auto.ru Бизнес | 2025-2026</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        :root {
+            /* Auto.ru Business Brand Colors */
+            --brand-red: #E60000;      /* Auto Red 01 */
+            --brand-sand: #DBD0C3;     /* Sand 03 */
+            --brand-gray: #2C2B2C;     /* Dark Gray 05 */
+            --brand-black: #1C1A1C;    /* Black 06 */
+
+            --bg-dark: #0A0A0F;
+            --bg-card: #12121A;
+            --bg-light: var(--brand-sand);
+            --text-light: #FFFFFF;
+            --text-dark: var(--brand-black);
+            --accent-red: var(--brand-red);
+            --accent-blue: #4A90D9;
+            --accent-purple: #8B5CF6;
+            --accent-cyan: #06B6D4;
+            --accent-green: #10B981;
+            --accent-orange: #F59E0B;
+            --gray-dark: var(--brand-gray);
+            --gray-medium: #2D2D3A;
+            --gray-light: #9CA3AF;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { height: 100%; overflow: hidden; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-light);
+        }
+
+        /* Slides */
+        .slides-container {
+            display: flex;
+            height: 100vh;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .slide {
+            min-width: 100vw;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 60px 100px;
+            position: relative;
+            flex-shrink: 0;
+            background: var(--bg-dark);
+        }
+
+        /* Navigation */
+        .nav-arrow {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 56px;
+            height: 56px;
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            color: white;
+            font-size: 20px;
+        }
+
+        .nav-arrow:hover {
+            background: var(--accent-red);
+            border-color: var(--accent-red);
+        }
+
+        .nav-arrow:disabled { opacity: 0.2; cursor: not-allowed; }
+        .nav-prev { left: 24px; }
+        .nav-next { right: 24px; }
+
+        .nav {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            display: flex;
+            gap: 8px;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(10px);
+            padding: 10px 16px;
+            border-radius: 24px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .nav-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-dot.active {
+            background: var(--accent-red);
+            width: 24px;
+            border-radius: 4px;
+        }
+
+        .section-indicator {
+            position: fixed;
+            top: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            display: flex;
+            gap: 4px;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(10px);
+            padding: 8px 12px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .section-tab {
+            padding: 6px 12px;
+            border-radius: 12px;
+            color: var(--gray-light);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .section-tab.active {
+            background: var(--accent-red);
+            color: white;
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-red), var(--accent-purple));
+            z-index: 1001;
+            transition: width 0.3s ease;
+        }
+
+        .slide-counter {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            font-size: 12px;
+            color: var(--gray-light);
+            z-index: 1000;
+        }
+
+        /* Header */
+        .slide-header {
+            position: absolute;
+            top: 24px;
+            left: 100px;
+            right: 100px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: var(--gray-light);
+        }
+
+        .logo {
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Logo from Figma brandbook */
+        .logo-img {
+            height: 32px;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-svg {
+            height: 24px;
+            width: auto;
+        }
+
+        .logo-svg .logo-text {
+            fill: white;
+        }
+
+        .slide-light .logo-svg .logo-text {
+            fill: #1C1A1C;
+        }
+
+        /* Typography */
+        h1 { font-size: 64px; font-weight: 800; line-height: 1.1; letter-spacing: -2px; margin-bottom: 32px; }
+        h2 { font-size: 48px; font-weight: 700; line-height: 1.15; letter-spacing: -1.5px; margin-bottom: 24px; }
+        h3 { font-size: 24px; font-weight: 600; line-height: 1.3; margin-bottom: 16px; }
+        p { font-size: 20px; line-height: 1.6; color: var(--gray-light); max-width: 700px; }
+
+        .highlight { color: var(--accent-red); }
+        .highlight-blue { color: var(--accent-blue); }
+        .highlight-purple { color: var(--accent-purple); }
+        .highlight-cyan { color: var(--accent-cyan); }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 28px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .card-glass {
+            background: rgba(255,255,255,0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        /* Layouts */
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+        .three-col { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+        .four-col { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+
+        /* 3D Canvas */
+        #planet-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .slide-content {
+            position: relative;
+            z-index: 1;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease 0.2s;
+        }
+
+        .slide.active .slide-content {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Cover */
+        .slide-cover {
+            background: linear-gradient(135deg, var(--bg-dark) 0%, #0F0A1A 100%);
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .cover-badge {
+            display: inline-block;
+            background: rgba(230, 57, 70, 0.15);
+            border: 1px solid rgba(230, 57, 70, 0.3);
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--accent-red);
+            margin-bottom: 32px;
+            letter-spacing: 1px;
+        }
+
+        /* Timeline */
+        .timeline {
+            display: flex;
+            position: relative;
+            margin-top: 40px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 24px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple), var(--accent-cyan), var(--accent-green));
+        }
+
+        .timeline-item {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            padding-top: 48px;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            top: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 3px solid var(--bg-dark);
+        }
+
+        .timeline-year {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .timeline-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .timeline-desc {
+            font-size: 13px;
+            color: var(--gray-light);
+        }
+
+        /* Table */
+        .data-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 14px;
+        }
+
+        .data-table th {
+            text-align: left;
+            padding: 14px 18px;
+            background: var(--bg-card);
+            font-weight: 600;
+            color: var(--gray-light);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .data-table th:first-child { border-radius: 12px 0 0 0; }
+        .data-table th:last-child { border-radius: 0 12px 0 0; }
+
+        .data-table td {
+            padding: 14px 18px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            background: var(--bg-card);
+        }
+
+        .data-table tr:last-child td:first-child { border-radius: 0 0 0 12px; }
+        .data-table tr:last-child td:last-child { border-radius: 0 0 12px 0; }
+
+        .tool-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .tool-autoru { background: rgba(230, 57, 70, 0.15); color: var(--accent-red); }
+        .tool-gpt { background: rgba(16, 185, 129, 0.15); color: var(--accent-green); }
+        .tool-design { background: rgba(139, 92, 246, 0.15); color: var(--accent-purple); }
+        .tool-analytics { background: rgba(6, 182, 212, 0.15); color: var(--accent-cyan); }
+
+        /* Chat - Improved Professional Style */
+        .agent-chat {
+            background: linear-gradient(135deg, #0D1117 0%, #161B22 100%);
+            border-radius: 20px;
+            padding: 0;
+            max-width: 480px;
+            border: 1px solid rgba(255,255,255,0.1);
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+
+        .chat-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 20px;
+            background: rgba(255,255,255,0.03);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .chat-avatar-group {
+            display: flex;
+            margin-left: -8px;
+        }
+
+        .chat-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            margin-left: -8px;
+            border: 2px solid #0D1117;
+        }
+
+        .chat-title {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .chat-subtitle {
+            font-size: 11px;
+            color: var(--accent-green);
+        }
+
+        .chat-messages {
+            padding: 16px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .chat-msg {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+
+        .chat-msg-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        .chat-msg-content {
+            background: rgba(255,255,255,0.05);
+            padding: 10px 14px;
+            border-radius: 0 12px 12px 12px;
+            max-width: 320px;
+        }
+
+        .chat-msg-name {
+            font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .chat-msg-text {
+            font-size: 13px;
+            line-height: 1.4;
+            color: rgba(255,255,255,0.9);
+        }
+
+        .chat-msg-time {
+            font-size: 10px;
+            color: rgba(255,255,255,0.3);
+            margin-top: 4px;
+        }
+
+        .chat-msg-system {
+            text-align: center;
+            font-size: 11px;
+            color: var(--gray-light);
+            padding: 8px;
+            background: rgba(255,255,255,0.02);
+            border-radius: 8px;
+        }
+
+        .chat-typing {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            background: rgba(255,255,255,0.02);
+            border-top: 1px solid rgba(255,255,255,0.05);
+            font-size: 12px;
+            color: var(--gray-light);
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 3px;
+        }
+
+        .typing-dots span {
+            width: 6px;
+            height: 6px;
+            background: var(--accent-cyan);
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typing {
+            0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
+            30% { opacity: 1; transform: translateY(-3px); }
+        }
+
+        /* Product Card */
+        .product-card {
+            background: linear-gradient(135deg, var(--bg-card), #1a1a2e);
+            border-radius: 20px;
+            padding: 32px;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan));
+        }
+
+        /* Logo placeholder - replace with actual logos */
+        .company-logo {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 16px;
+        }
+
+        /* Roadmap */
+        .roadmap {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .roadmap-phase {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 28px;
+            position: relative;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .roadmap-phase.active {
+            border-color: var(--accent-red);
+            background: linear-gradient(135deg, var(--bg-card), rgba(230, 57, 70, 0.1));
+        }
+
+        .phase-badge {
+            position: absolute;
+            top: -10px;
+            right: 20px;
+            background: var(--accent-red);
+            color: white;
+            padding: 6px 12px;
+            font-size: 10px;
+            font-weight: 700;
+            border-radius: 6px;
+            text-transform: uppercase;
+        }
+
+        .phase-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+
+        .phase-title {
+            font-size: 12px;
+            color: var(--gray-light);
+            font-weight: 600;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .phase-heading {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .phase-list {
+            list-style: none;
+            font-size: 14px;
+            color: var(--gray-light);
+        }
+
+        .phase-list li {
+            padding: 6px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .phase-list li::before {
+            content: '';
+            width: 4px;
+            height: 4px;
+            background: var(--accent-red);
+            border-radius: 50%;
+        }
+
+        /* Final Slide */
+        .slide-final {
+            text-align: center;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, #0F0A1A 100%);
+        }
+
+        .step-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-top: 48px;
+            text-align: left;
+        }
+
+        .step-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 28px;
+            border: 1px solid rgba(255,255,255,0.05);
+            position: relative;
+        }
+
+        .step-number {
+            position: absolute;
+            top: -12px;
+            left: 24px;
+            background: var(--accent-red);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .step-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .slide { padding: 40px 60px; }
+            h1 { font-size: 48px; }
+            h2 { font-size: 36px; }
+            .roadmap, .step-cards { grid-template-columns: 1fr; }
+        }
+
+        /* Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .floating { animation: float 4s ease-in-out infinite; }
+
+        .glow-red { box-shadow: 0 0 40px rgba(230, 57, 70, 0.3); }
+        .glow-purple { box-shadow: 0 0 40px rgba(139, 92, 246, 0.3); }
+        .glow-cyan { box-shadow: 0 0 40px rgba(6, 182, 212, 0.3); }
+
+        /* Enhanced Layout Improvements */
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Better text handling */
+        h1, h2, h3 {
+            text-wrap: balance;
+        }
+
+        p {
+            text-wrap: pretty;
+        }
+
+        /* Improved timeline spacing */
+        .timeline-item {
+            padding: 0 8px;
+        }
+
+        .timeline-year {
+            font-feature-settings: "tnum";
+        }
+
+        /* Better table styling */
+        .data-table {
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .data-table th,
+        .data-table td {
+            white-space: nowrap;
+        }
+
+        /* Improved badge styling */
+        .cover-badge {
+            text-transform: uppercase;
+            backdrop-filter: blur(4px);
+        }
+
+        /* Better slide transitions */
+        .slide {
+            will-change: transform;
+        }
+
+        /* Consistent icon boxes */
+        [style*="border-radius: 14px"] {
+            flex-shrink: 0;
+        }
+
+        /* Better visual hierarchy */
+        strong {
+            color: white;
+            font-weight: 600;
+        }
+
+        /* Smooth scrolling for content */
+        .slide-content {
+            overflow-y: auto;
+            max-height: calc(100vh - 120px);
+            scrollbar-width: thin;
+            scrollbar-color: var(--gray-medium) transparent;
+        }
+
+        .slide-content::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .slide-content::-webkit-scrollbar-thumb {
+            background: var(--gray-medium);
+            border-radius: 2px;
+        }
+
+        /* Fix timeline on smaller screens */
+        @media (max-width: 1200px) {
+            .timeline-item {
+                padding-top: 56px;
+            }
+
+            .timeline-title {
+                font-size: 13px;
+            }
+
+            .timeline-desc {
+                font-size: 10px;
+            }
+        }
+
+        /* Better card content alignment */
+        .card > *:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Highlight green for case study */
+        .highlight-green {
+            color: var(--accent-green);
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+
+    <div class="section-indicator" id="sectionIndicator">
+        <div class="section-tab active" onclick="goToSlide(0)">Эволюция AI</div>
+        <div class="section-tab" onclick="goToSlide(3)">Авто.ру AI</div>
+        <div class="section-tab" onclick="goToSlide(11)">Мультиагенты</div>
+    </div>
+
+    <button class="nav-arrow nav-prev" id="prevBtn" onclick="prevSlide()">←</button>
+    <button class="nav-arrow nav-next" id="nextBtn" onclick="nextSlide()">→</button>
+
+    <div class="slide-counter" id="slideCounter">1 / 17</div>
+
+    <div class="slides-container" id="slides">
+
+        <!-- ==================== SECTION 1: AI EVOLUTION ==================== -->
+
+        <!-- SLIDE 0: Cover -->
+        <section class="slide slide-cover active" id="slide-0" style="background: linear-gradient(rgba(10,10,15,0.85), rgba(10,10,15,0.9)), url('https://gen.krea.ai/images/67ea8709-28f7-4e74-8cd6-0ce33df59e8f.png') center/cover;">
+            <div class="slide-content" style="text-align: center;">
+                <!-- Logo from Figma brandbook -->
+                <div style="margin-bottom: 24px;">
+                    <div class="logo-img">
+                        <svg class="logo-svg" viewBox="0 0 240 32" height="32">
+                            <text x="0" y="25" font-family="Inter, sans-serif" font-weight="700" font-size="24" fill="white">auto.ru бизнес</text>
+                        </svg>
+                    </div>
+                </div>
+                <h1>Искусственный<br>интеллект 2026</h1>
+            </div>
+        </section>
+
+        <!-- SLIDE 1: AI History Timeline (2012-2025) -->
+        <section class="slide slide-galaxy" id="slide-1">
+            <canvas id="planet-canvas"></canvas>
+            <div class="slide-header">
+                <span class="logo"><svg class="logo-svg" viewBox="0 0 160 22" height="20"><text x="0" y="17" font-family="Inter, sans-serif" font-weight="700" font-size="16" fill="white">auto.ru бизнес</text></svg></span>
+            </div>
+            <div class="slide-content">
+                <h2>Эволюция AI: <span class="highlight-purple">2012 → 2030</span></h2>
+                <p style="margin-bottom: 20px;">От прорыва в распознавании изображений до автономных агентов, которые действуют самостоятельно</p>
+
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-dot" style="background: var(--accent-blue);"></div>
+                        <div class="timeline-year" style="color: var(--accent-blue);">2012</div>
+                        <div class="timeline-title">AlexNet</div>
+                        <div class="timeline-desc">Прорыв в компьютерном<br>зрении, ImageNet</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot" style="background: var(--accent-purple);"></div>
+                        <div class="timeline-year" style="color: var(--accent-purple);">2017</div>
+                        <div class="timeline-title">Трансформеры</div>
+                        <div class="timeline-desc">«Attention is All You Need»<br>Основа для LLM</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot" style="background: var(--accent-orange);"></div>
+                        <div class="timeline-year" style="color: var(--accent-orange);">2022</div>
+                        <div class="timeline-title">ChatGPT</div>
+                        <div class="timeline-desc">AI для каждого<br>100M пользователей за 2 мес</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot" style="background: var(--accent-cyan);"></div>
+                        <div class="timeline-year" style="color: var(--accent-cyan);">2024</div>
+                        <div class="timeline-title">Claude 3 / GPT-4o</div>
+                        <div class="timeline-desc">Мультимодальность<br>Рассуждения</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot" style="background: var(--accent-red);"></div>
+                        <div class="timeline-year" style="color: var(--accent-red);">2025</div>
+                        <div class="timeline-title">AI-агенты</div>
+                        <div class="timeline-desc">Автономные действия<br>Мультиагентные системы</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot" style="background: linear-gradient(135deg, #FFD700, #FFA500); box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);"></div>
+                        <div class="timeline-year" style="color: #FFD700;">2030</div>
+                        <div class="timeline-title">AGI</div>
+                        <div class="timeline-desc">Искусственный<br>общий интеллект</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 2: 2025 - Era of Agents -->
+        <section class="slide" id="slide-2" style="background: linear-gradient(to right, rgba(10,10,15,0.95), rgba(10,10,15,0.7)), url('https://gen.krea.ai/images/74f97043-c0ba-4355-85ae-7f245655b394.png') right/contain no-repeat;">
+            <div class="slide-header">
+                <span class="logo"><svg class="logo-svg" viewBox="0 0 160 22" height="20"><text x="0" y="17" font-family="Inter, sans-serif" font-weight="700" font-size="16" fill="white">auto.ru бизнес</text></svg></span>
+            </div>
+            <div class="slide-content">
+                <div class="two-col">
+                    <div>
+                        <div class="cover-badge">2025</div>
+                        <h2>Эра <span class="highlight">AI-агентов</span></h2>
+                        <p>AI больше не просто отвечает на вопросы — он действует: ищет информацию, принимает решения, выполняет задачи без постоянного контроля человека</p>
+
+                        <div class="card" style="margin-top: 32px;">
+                            <div style="display: flex; align-items: center; gap: 20px;">
+                                <div style="font-size: 48px; font-weight: 900; background: linear-gradient(135deg, var(--accent-red), var(--accent-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">99%</div>
+                                <div>
+                                    <div style="font-size: 15px; font-weight: 600;">разработчиков</div>
+                                    <div style="font-size: 13px; color: var(--gray-light);">исследуют AI-агентов</div>
+                                    <div style="font-size: 11px; color: var(--gray-light); margin-top: 4px;">IBM, 2025</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <!-- Agent capabilities diagram - replace icons with Figma 3D models -->
+                        <div class="card card-glass" style="padding: 32px;">
+                            <h3 style="margin-bottom: 24px; font-size: 18px;">Что умеет агент</h3>
+                            <div style="display: flex; flex-direction: column; gap: 20px;">
+                                <div style="display: flex; align-items: center; gap: 16px;">
+                                    <div style="width: 52px; height: 52px; background: rgba(139, 92, 246, 0.15); border-radius: 14px; display: flex; align-items: center; justify-content: center;">
+                                        <!-- Replace with 3D model from Figma -->
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>
+                                    </div>
+                                    <div>
+                                        <div style="font-weight: 600; font-size: 15px;">Исследует</div>
+                                        <div style="font-size: 13px; color: var(--gray-light);">Ищет в интернете, CRM, базах данных</div>
+                                    </div>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 16px;">
+                                    <div style="width: 52px; height: 52px; background: rgba(6, 182, 212, 0.15); border-radius: 14px; display: flex; align-items: center; justify-content: center;">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#06B6D4" stroke-width="2"><path d="M12 20V10"></path><path d="M18 20V4"></path><path d="M6 20v-4"></path></svg>
+                                    </div>
+                                    <div>
+                                        <div style="font-weight: 600; font-size: 15px;">Анализирует</div>
+                                        <div style="font-size: 13px; color: var(--gray-light);">Находит паттерны, делает выводы</div>
+                                    </div>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 16px;">
+                                    <div style="width: 52px; height: 52px; background: rgba(16, 185, 129, 0.15); border-radius: 14px; display: flex; align-items: center; justify-content: center;">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+                                    </div>
+                                    <div>
+                                        <div style="font-weight: 600; font-size: 15px;">Выполняет</div>
+                                        <div style="font-size: 13px; color: var(--gray-light);">Пишет письма, создаёт КП, звонит</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SECTION 2: DEALERS & AI ==================== -->
+
+        <!-- SLIDE 4: Top 3 Directions -->
+        <section class="slide" id="slide-4">
+            <div class="slide-header">
+                <span class="logo"><svg class="logo-svg" viewBox="0 0 160 22" height="20"><text x="0" y="17" font-family="Inter, sans-serif" font-weight="700" font-size="16" fill="white">auto.ru бизнес</text></svg></span>
+            </div>
+            <div class="slide-content">
+                <h2 style="margin-bottom: 36px;">Топ-3 направления <span class="highlight-purple">применения AI</span></h2>
+                <div class="three-col">
+                    <div class="card" style="border-top: 3px solid var(--accent-red); padding-top: 28px;">
+                        <div style="width: 52px; height: 52px; background: rgba(230, 57, 70, 0.15); border-radius: 14px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+                            <!-- Replace with 3D icon from Figma -->
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#E63946" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                        </div>
+                        <div style="font-size: 40px; font-weight: 900; color: var(--accent-red); margin-bottom: 12px;">01</div>
+                        <h3>Аналитика звонков</h3>
+                        <p style="font-size: 14px;">10 из 12 опрошенных. Чек-листы, поиск ошибок, уведомления</p>
+                    </div>
+                    <div class="card" style="border-top: 3px solid var(--accent-purple); padding-top: 28px;">
+                        <div style="width: 52px; height: 52px; background: rgba(139, 92, 246, 0.15); border-radius: 14px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                        </div>
+                        <div style="font-size: 40px; font-weight: 900; color: var(--accent-purple); margin-bottom: 12px;">02</div>
+                        <h3>Генерация описаний</h3>
+                        <p style="font-size: 14px;">Тексты для классифайдов, контент для рекламы</p>
+                    </div>
+                    <div class="card" style="border-top: 3px solid var(--accent-cyan); padding-top: 28px;">
+                        <div style="width: 52px; height: 52px; background: rgba(6, 182, 212, 0.15); border-radius: 14px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#06B6D4" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                        </div>
+                        <div style="font-size: 40px; font-weight: 900; color: var(--accent-cyan); margin-bottom: 12px;">03</div>
+                        <h3>Креативы для рекламы</h3>
+                        <p style="font-size: 14px;">Баннеры, сторис, дизайн для соцсетей</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 5: Аналитика звонков (СКРИН) -->
+        <section class="slide" id="slide-5" style="background: var(--bg-dark);">
+            <div class="slide-header">
+                <span class="logo"><svg class="logo-svg" viewBox="0 0 160 22" height="20"><text x="0" y="17" font-family="Inter, sans-serif" font-weight="700" font-size="16" fill="white">auto.ru бизнес</text></svg></span>
+            </div>
+            <div class="slide-content" style="display: flex; align-items: center; justify-content: center; padding: 20px;">
+                <img src="screen-4-ford-focus.jpg" alt="Аналитика звонков" style="max-width: 95%; max-height: 85vh; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.4);">
+            </div>
+        </section>
+
+        <!-- SLIDE 6: Качество звонка (СКРИН) -->
+        <section class="slide" id="slide-6" style="background: var(--bg-dark);">
+            <div class="slide-header">
+                <span class="logo"><svg class="logo-svg" viewBox="0 0 160 22" height="20"><text x="0" y="17" font-family="Inter, sans-serif" font-weight="700" font-size="16" fill="white">auto.ru бизнес</text></svg></span>
+            </div>
+            <div class="slide-content" style="display: flex; align-items: center; justify-content: center; padding: 20px;">
+                <img src="screen-5-robot.jpg" alt="Качество звонка" style="max-width: 95%; max-height: 85vh; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.4);">
+            </div>
+        </section>
+
+        <!-- SLIDE 7: Робот-помощник (СКРИН) -->
+        <section class="slide" id="slide-7" style="background: var(--bg-dark);">
+            <div class="slide-header">
+                <span class="logo"><svg class="logo-svg" viewBox="0 0 160 22" height="20"><text x="0" y="17" font-family="Inter, sans-serif" font-weight="700" font-size="16" fill="white">auto.ru бизнес</text></svg></span>
+            </div>
+            <div class="slide-content" style="display: flex; align-items: center; justify-content: center; padding: 20px;">
+                <img src="screen-3-photo-assessment.jpg" alt="Робот-помощник" style="max-width: 95%; max-height: 85vh; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.4);">
+            </div>
+        </section>
+
+        <!-- SLIDE 8: Оценка состояния (СКРИН) -->
+        <section class="slide" id="slide-8" style="background: var(--bg-dark);">
+            <div class="slide-header">
+                <span class="logo"><svg class="logo-svg" viewBox="0 0 160 22" height="20"><text x="0" y="17" font-family="Inter, sans-serif" font-weight="700" font-size="16" fill="white">auto.ru бизнес</text></svg></span>
+            </div>
+            <div class="slide-content" style="display: flex; align-items: center; justify-content: center; padding: 20px;">
+                <img src="screen-6-smart-pricing.jpg" alt="Оценка состояния" style="max-width: 95%; max-height: 85vh; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.4);">
+            </div>
+        </section>
+
+        <!-- SLIDE 9: Оценка по фото (СКРИН) -->
+        <section class="slide" id="slide-9" style="background: var(--bg-dark);">
+            <div class="slide-header">
+                <span class="logo"><svg class="logo-svg" viewBox="0 0 160 22" height="20"><text x="0" y="17" font-family="Inter, sans-serif" font-weight="700" font-size="16" fill="white">auto.ru бизнес</text></svg></span>
+            </div>
+            <div class="slide-content" style="display: flex; align-items: center; justify-content: center; padding: 20px;">
+                <img src="screen-2-call-quality.jpg" alt="Оценка по фото" style="max-width: 95%; max-height: 85vh; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.4);">
+            </div>
+        </section>
+
+        <!-- SLIDE 10: Умная тактика (СКРИН) -->
+        <section class="slide" id="slide-10" style="background: var(--bg-dark);">
+            <div class="slide-header">
+                <span class="logo"><svg class="logo-svg" viewBox="0 0 160 22" height="20"><text x="0" y="17" font-family="Inter, sans-serif" font-weight="700" font-size="16" fill="white">auto.ru бизнес</text></svg></span>
+            </div>
+            <div class="slide-content" style="display: flex; align-items: center; justify-content: center; padding: 20px;">
+                <img src="screen-1-analytics.jpg" alt="Умная тактика" style="max-width: 95%; max-height: 85vh; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.4);">
+            </div>
+        </section>
+
+        <!-- ==================== SECTION 3: MULTI-AGENT WORLD ==================== -->
+
+        <!-- SLIDE 11: What are Multi-agents -->
+        <section class="slide" id="slide-11" style="background: linear-gradient(rgba(10,10,15,0.88), rgba(10,10,26,0.92)), url('https://imagedelivery.net/yn_JX_LzJpQI9TTynGwR_Q/e657f4ad-550f-4142-ee3c-ac4328da9601/public?exp=1770035063&sig=ea8720a0db2f1f5849b637de51f3c2388b1920cdced315610bb0c6e9bb72417f') center/cover;">
+            <div class="slide-header">
+                <span class="logo"><svg class="logo-svg" viewBox="0 0 160 22" height="20"><text x="0" y="17" font-family="Inter, sans-serif" font-weight="700" font-size="16" fill="white">auto.ru бизнес</text></svg></span>
+            </div>
+            <div class="slide-content">
+                <div class="two-col">
+                    <div>
+                        <div class="cover-badge" style="background: rgba(139, 92, 246, 0.15); border-color: rgba(139, 92, 246, 0.3); color: var(--accent-purple);">ТРЕНД 2026</div>
+                        <h2>Мультиагентные<br><span class="highlight-purple">системы</span></h2>
+                        <p>Команда специализированных AI-агентов, которые работают вместе, проверяют друг друга и достигают результата без участия человека</p>
+
+                        <div class="card" style="margin-top: 28px;">
+                            <div style="display: flex; align-items: center; gap: 16px;">
+                                <div style="font-size: 42px; font-weight: 900; background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">1,445%</div>
+                                <div>
+                                    <div style="font-size: 14px; font-weight: 600;">рост интереса</div>
+                                    <div style="font-size: 12px; color: var(--gray-light);">к мультиагентам за год • Gartner</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <!-- Multi-agent flow diagram -->
+                        <div style="background: var(--bg-card); border-radius: 20px; padding: 28px; border: 1px solid rgba(255,255,255,0.05);">
+                            <h3 style="font-size: 16px; margin-bottom: 24px; color: var(--gray-light);">Как работает команда агентов</h3>
+                            <div style="display: flex; flex-direction: column; gap: 14px;">
+                                <div style="display: flex; align-items: center; gap: 14px;">
+                                    <div style="width: 44px; height: 44px; background: var(--accent-red); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                                    </div>
+                                    <div style="flex: 1;">
+                                        <div style="font-weight: 600; font-size: 14px;">Квалификатор</div>
+                                        <div style="font-size: 12px; color: var(--gray-light);">Оценивает и приоритизирует лида</div>
+                                    </div>
+                                </div>
+                                <div style="border-left: 2px solid var(--gray-medium); height: 12px; margin-left: 22px;"></div>
+                                <div style="display: flex; align-items: center; gap: 14px;">
+                                    <div style="width: 44px; height: 44px; background: var(--accent-purple); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35" stroke="white" stroke-width="2"/></svg>
+                                    </div>
+                                    <div style="flex: 1;">
+                                        <div style="font-weight: 600; font-size: 14px;">Исследователь</div>
+                                        <div style="font-size: 12px; color: var(--gray-light);">Собирает информацию о клиенте</div>
+                                    </div>
+                                </div>
+                                <div style="border-left: 2px solid var(--gray-medium); height: 12px; margin-left: 22px;"></div>
+                                <div style="display: flex; align-items: center; gap: 14px;">
+                                    <div style="width: 44px; height: 44px; background: var(--accent-cyan); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                    </div>
+                                    <div style="flex: 1;">
+                                        <div style="font-weight: 600; font-size: 14px;">Писатель</div>
+                                        <div style="font-size: 12px; color: var(--gray-light);">Готовит персонализированное КП</div>
+                                    </div>
+                                </div>
+                                <div style="border-left: 2px solid var(--gray-medium); height: 12px; margin-left: 22px;"></div>
+                                <div style="display: flex; align-items: center; gap: 14px;">
+                                    <div style="width: 44px; height: 44px; background: var(--accent-green); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                                    </div>
+                                    <div style="flex: 1;">
+                                        <div style="font-weight: 600; font-size: 14px;">Критик</div>
+                                        <div style="font-size: 12px; color: var(--gray-light);">Проверяет качество работы других</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 12: Allianz - Project Nemo -->
+        <section class="slide" id="slide-12" style="background: linear-gradient(135deg, var(--bg-dark), #0a1628);">
+            <div class="slide-header">
+                <span class="logo"><svg class="logo-svg" viewBox="0 0 160 22" height="20"><text x="0" y="17" font-family="Inter, sans-serif" font-weight="700" font-size="16" fill="white">auto.ru бизнес</text></svg></span>
+            </div>
+            <div class="slide-content">
+                <div class="two-col">
+                    <div>
+                        <div class="cover-badge" style="background: rgba(0, 58, 112, 0.15); border-color: rgba(0, 58, 112, 0.3); color: #003A70;">РЕАЛЬНЫЙ КЕЙС • ALLIANZ</div>
+                        <h2 style="display: flex; align-items: center; gap: 16px;">
+                            <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
+                                <rect width="60" height="60" rx="12" fill="#003A70"/>
+                                <text x="30" y="26" text-anchor="middle" font-family="Inter" font-size="10" font-weight="800" fill="white">ALLIANZ</text>
+                                <text x="30" y="42" text-anchor="middle" font-family="Inter" font-size="8" fill="#00A0E0">Project Nemo</text>
+                            </svg>
+                            <span>Agentic AI<br><span class="highlight-cyan">для страховых</span></span>
+                        </h2>
+                        <p>Allianz запустил Project Nemo — систему AI-агентов для автоматизации обработки страховых случаев. Агенты работают автономно, но решения принимает человек.</p>
+
+                        <div style="margin-top: 24px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
+                            <div class="card" style="text-align: center; padding: 16px;">
+                                <div style="font-size: 28px; font-weight: 800; color: var(--accent-green);">−80%</div>
+                                <div style="font-size: 11px; color: var(--gray-light);">времени обработки</div>
+                            </div>
+                            <div class="card" style="text-align: center; padding: 16px;">
+                                <div style="font-size: 28px; font-weight: 800; color: var(--accent-cyan);">2025</div>
+                                <div style="font-size: 11px; color: var(--gray-light);">запуск в Австралии</div>
+                            </div>
+                            <div class="card" style="text-align: center; padding: 16px; grid-column: span 2;">
+                                <div style="font-size: 14px; color: var(--gray-light);">Human-in-the-Loop: AI рекомендует, человек решает</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <!-- Agent Pipeline Visualization -->
+                        <div style="background: var(--bg-card); border-radius: 20px; padding: 24px; border: 1px solid rgba(0, 58, 112, 0.2);">
+                            <div style="font-size: 12px; color: var(--gray-light); margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px;">Конвейер агентов Project Nemo</div>
+                            <div style="display: flex; flex-direction: column; gap: 8px;">
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <div style="width: 36px; height: 36px; background: #003A70; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700;">1</div>
+                                    <div style="flex: 1; font-size: 13px;"><strong>Intake Agent</strong> — принимает заявку</div>
+                                </div>
+                                <div style="margin-left: 18px; border-left: 2px solid var(--gray-medium); height: 8px;"></div>
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <div style="width: 36px; height: 36px; background: var(--accent-cyan); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700;">2</div>
+                                    <div style="flex: 1; font-size: 13px;"><strong>Document Agent</strong> — анализирует документы</div>
+                                </div>
+                                <div style="margin-left: 18px; border-left: 2px solid var(--gray-medium); height: 8px;"></div>
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <div style="width: 36px; height: 36px; background: var(--accent-purple); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700;">3</div>
+                                    <div style="flex: 1; font-size: 13px;"><strong>Coverage Agent</strong> — проверяет покрытие</div>
+                                </div>
+                                <div style="margin-left: 18px; border-left: 2px solid var(--gray-medium); height: 8px;"></div>
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <div style="width: 36px; height: 36px; background: var(--accent-orange); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700;">4</div>
+                                    <div style="flex: 1; font-size: 13px;"><strong>Assessment Agent</strong> — оценивает ущерб</div>
+                                </div>
+                                <div style="margin-left: 18px; border-left: 2px solid var(--gray-medium); height: 8px;"></div>
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <div style="width: 36px; height: 36px; background: var(--accent-red); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700;">5</div>
+                                    <div style="flex: 1; font-size: 13px;"><strong>Fraud Agent</strong> — проверяет на мошенничество</div>
+                                </div>
+                                <div style="margin-left: 18px; border-left: 2px solid var(--gray-medium); height: 8px;"></div>
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <div style="width: 36px; height: 36px; background: var(--accent-green); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700;">6</div>
+                                    <div style="flex: 1; font-size: 13px;"><strong>Recommendation Agent</strong> → <span style="color: var(--accent-orange);">Человек решает</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <p style="font-size: 11px; color: var(--gray-light); margin-top: 12px; text-align: center;">Источник: allianz.com, ноябрь 2025</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 13: American Express Fraud Detection -->
+        <section class="slide" id="slide-13" style="background: linear-gradient(rgba(10,10,15,0.85), rgba(10,10,26,0.9)), url('https://imagedelivery.net/yn_JX_LzJpQI9TTynGwR_Q/99770cfd-64ed-4c40-a770-f4c464b83301/public?exp=1770034996&sig=ded4bdfb21977ecec1c36b061c41b3cd189ee72f4274b776921f17a813f26133') center/cover;">
+            <div class="slide-header">
+                <span class="logo"><svg class="logo-svg" viewBox="0 0 160 22" height="20"><text x="0" y="17" font-family="Inter, sans-serif" font-weight="700" font-size="16" fill="white">auto.ru бизнес</text></svg></span>
+            </div>
+            <div class="slide-content">
+                <div class="two-col">
+                    <div>
+                        <div class="cover-badge" style="background: rgba(0, 114, 198, 0.15); border-color: rgba(0, 114, 198, 0.3); color: #0072C6;">РЕАЛЬНЫЙ КЕЙС • AMERICAN EXPRESS</div>
+                        <h2 style="display: flex; align-items: center; gap: 16px;">
+                            <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
+                                <rect width="60" height="60" rx="12" fill="#0072C6"/>
+                                <text x="30" y="38" text-anchor="middle" font-family="Inter" font-size="18" font-weight="800" fill="white">AMEX</text>
+                            </svg>
+                            <span>AI-детекция<br><span class="highlight-cyan">мошенничества</span></span>
+                        </h2>
+                        <p>American Express использует мультиагентную систему AI для анализа транзакций в реальном времени. 12 специализированных агентов работают вместе.</p>
+
+                        <div style="margin-top: 24px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
+                            <div class="card" style="text-align: center; padding: 16px;">
+                                <div style="font-size: 28px; font-weight: 800; color: var(--accent-green);">$2B</div>
+                                <div style="font-size: 11px; color: var(--gray-light);">экономия в год</div>
+                            </div>
+                            <div class="card" style="text-align: center; padding: 16px;">
+                                <div style="font-size: 28px; font-weight: 800; color: var(--accent-cyan);">−65%</div>
+                                <div style="font-size: 11px; color: var(--gray-light);">ложных срабатываний</div>
+                            </div>
+                            <div class="card" style="text-align: center; padding: 16px;">
+                                <div style="font-size: 28px; font-weight: 800; color: var(--accent-purple);">24/7</div>
+                                <div style="font-size: 11px; color: var(--gray-light);">мониторинг</div>
+                            </div>
+                            <div class="card" style="text-align: center; padding: 16px;">
+                                <div style="font-size: 28px; font-weight: 800; color: var(--accent-orange);">12</div>
+                                <div style="font-size: 11px; color: var(--gray-light);">AI-агентов</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <!-- Agent Chat Visualization -->
+                        <div class="agent-chat" style="max-height: 480px;">
+                            <div class="chat-header" style="background: linear-gradient(135deg, #1a0a0a, #0a1a1a);">
+                                <div class="chat-avatar-group">
+                                    <div class="chat-avatar" style="background: var(--accent-red); margin-left: 0;">T</div>
+                                    <div class="chat-avatar" style="background: var(--accent-purple);">P</div>
+                                    <div class="chat-avatar" style="background: var(--accent-cyan);">C</div>
+                                    <div class="chat-avatar" style="background: var(--accent-orange);">R</div>
+                                    <div class="chat-avatar" style="background: var(--accent-green);">D</div>
+                                </div>
+                                <div>
+                                    <div class="chat-title">Fraud Detection Pipeline</div>
+                                    <div class="chat-subtitle">● 5 из 12 агентов в диалоге</div>
+                                </div>
+                            </div>
+                            <div class="chat-messages" style="max-height: 340px; overflow-y: auto;">
+                                <div class="chat-msg-system">⚠️ Транзакция #892847 • $4,200 • Нигерия</div>
+
+                                <div class="chat-msg">
+                                    <div class="chat-msg-avatar" style="background: var(--accent-red);">T</div>
+                                    <div class="chat-msg-content">
+                                        <div class="chat-msg-name" style="color: var(--accent-red);">Transaction Monitor</div>
+                                        <div class="chat-msg-text">Аномалия: клиент впервые отправляет в Нигерию. Сумма в 3x выше среднего. Передаю @PatternAnalyzer</div>
+                                        <div class="chat-msg-time">14:32:01</div>
+                                    </div>
+                                </div>
+
+                                <div class="chat-msg">
+                                    <div class="chat-msg-avatar" style="background: var(--accent-purple);">P</div>
+                                    <div class="chat-msg-content">
+                                        <div class="chat-msg-name" style="color: var(--accent-purple);">Pattern Analyzer</div>
+                                        <div class="chat-msg-text">Паттерн совпадает с "419 scam" на 73%. IP изменился 2 часа назад. @CustomerProfiler проверь историю</div>
+                                        <div class="chat-msg-time">14:32:02</div>
+                                    </div>
+                                </div>
+
+                                <div class="chat-msg">
+                                    <div class="chat-msg-avatar" style="background: var(--accent-cyan);">C</div>
+                                    <div class="chat-msg-content">
+                                        <div class="chat-msg-name" style="color: var(--accent-cyan);">Customer Profiler</div>
+                                        <div class="chat-msg-text">Клиент 8 лет, 0 международных переводов. Последний вход с нового устройства. Вероятность компрометации: HIGH</div>
+                                        <div class="chat-msg-time">14:32:02</div>
+                                    </div>
+                                </div>
+
+                                <div class="chat-msg">
+                                    <div class="chat-msg-avatar" style="background: var(--accent-orange);">R</div>
+                                    <div class="chat-msg-content">
+                                        <div class="chat-msg-name" style="color: var(--accent-orange);">Risk Scorer</div>
+                                        <div class="chat-msg-text">Агрегирую: pattern 73% + new_geo + new_device + amount_spike = <strong style="color: var(--accent-red);">Risk Score: 94/100</strong></div>
+                                        <div class="chat-msg-time">14:32:03</div>
+                                    </div>
+                                </div>
+
+                                <div class="chat-msg">
+                                    <div class="chat-msg-avatar" style="background: var(--accent-green);">D</div>
+                                    <div class="chat-msg-content">
+                                        <div class="chat-msg-name" style="color: var(--accent-green);">Decision Maker</div>
+                                        <div class="chat-msg-text">🛑 BLOCK транзакции. Инициирую звонок клиенту для верификации. @NotificationAgent отправь SMS</div>
+                                        <div class="chat-msg-time">14:32:03</div>
+                                    </div>
+                                </div>
+
+                                <div class="chat-msg-system" style="background: rgba(16, 185, 129, 0.1); color: var(--accent-green);">✓ Транзакция заблокирована за 2.3 сек</div>
+                            </div>
+                        </div>
+                        <p style="font-size: 10px; color: var(--gray-light); margin-top: 8px; text-align: center;">Источник: xcubelabs.com • Реальный диалог мультиагентной системы</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 14: Agent Chat - Extended -->
+        <section class="slide" id="slide-14">
+            <div class="slide-header">
+                <span class="logo"><svg class="logo-svg" viewBox="0 0 160 22" height="20"><text x="0" y="17" font-family="Inter, sans-serif" font-weight="700" font-size="16" fill="white">auto.ru бизнес</text></svg></span>
+            </div>
+            <div class="slide-content">
+                <div class="two-col">
+                    <div>
+                        <div class="cover-badge">ДЕМОНСТРАЦИЯ</div>
+                        <h2>Агенты <span class="highlight">в действии</span></h2>
+                        <p>Реальный сценарий: команда AI-агентов обрабатывает лида без участия человека. От квалификации до отправки персонального предложения.</p>
+
+                        <div style="margin-top: 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                            <div class="card" style="text-align: center; padding: 20px;">
+                                <div style="font-size: 28px; font-weight: 800; color: var(--accent-purple);">4</div>
+                                <div style="font-size: 12px; color: var(--gray-light);">агента в команде</div>
+                            </div>
+                            <div class="card" style="text-align: center; padding: 20px;">
+                                <div style="font-size: 28px; font-weight: 800; color: var(--accent-cyan);">3 мин</div>
+                                <div style="font-size: 12px; color: var(--gray-light);">на обработку лида</div>
+                            </div>
+                            <div class="card" style="text-align: center; padding: 20px;">
+                                <div style="font-size: 28px; font-weight: 800; color: var(--accent-green);">24/7</div>
+                                <div style="font-size: 12px; color: var(--gray-light);">работа без перерывов</div>
+                            </div>
+                            <div class="card" style="text-align: center; padding: 20px;">
+                                <div style="font-size: 28px; font-weight: 800; color: var(--accent-orange);">0</div>
+                                <div style="font-size: 12px; color: var(--gray-light);">пропущенных лидов</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <!-- Professional Agent Chat -->
+                        <div class="agent-chat">
+                            <div class="chat-header">
+                                <div class="chat-avatar-group">
+                                    <div class="chat-avatar" style="background: var(--accent-red); margin-left: 0;">Q</div>
+                                    <div class="chat-avatar" style="background: var(--accent-purple);">R</div>
+                                    <div class="chat-avatar" style="background: var(--accent-cyan);">W</div>
+                                    <div class="chat-avatar" style="background: var(--accent-green);">C</div>
+                                </div>
+                                <div>
+                                    <div class="chat-title">Обработка лида #4829</div>
+                                    <div class="chat-subtitle">● 4 агента активны</div>
+                                </div>
+                            </div>
+                            <div class="chat-messages">
+                                <div class="chat-msg-system">Новый лид: BMW X5, бюджет ~5M ₽</div>
+
+                                <div class="chat-msg">
+                                    <div class="chat-msg-avatar" style="background: var(--accent-red);">Q</div>
+                                    <div class="chat-msg-content">
+                                        <div class="chat-msg-name" style="color: var(--accent-red);">Квалификатор</div>
+                                        <div class="chat-msg-text">Лид горячий. Источник: Авто.ру. Время: 23:47 (нерабочее). Приоритет: HIGH</div>
+                                        <div class="chat-msg-time">23:47</div>
+                                    </div>
+                                </div>
+
+                                <div class="chat-msg">
+                                    <div class="chat-msg-avatar" style="background: var(--accent-purple);">R</div>
+                                    <div class="chat-msg-content">
+                                        <div class="chat-msg-name" style="color: var(--accent-purple);">Исследователь</div>
+                                        <div class="chat-msg-text">Нашёл: клиент также смотрел Mercedes GLE. История: 2 авто за 5 лет. Автотека: чистая история.</div>
+                                        <div class="chat-msg-time">23:48</div>
+                                    </div>
+                                </div>
+
+                                <div class="chat-msg">
+                                    <div class="chat-msg-avatar" style="background: var(--accent-cyan);">W</div>
+                                    <div class="chat-msg-content">
+                                        <div class="chat-msg-name" style="color: var(--accent-cyan);">Писатель</div>
+                                        <div class="chat-msg-text">Подготовил КП: BMW X5 xDrive40i + сравнение с GLE 400d. Добавил trade-in расчёт. Отправляю на email и WhatsApp.</div>
+                                        <div class="chat-msg-time">23:49</div>
+                                    </div>
+                                </div>
+
+                                <div class="chat-msg">
+                                    <div class="chat-msg-avatar" style="background: var(--accent-green);">C</div>
+                                    <div class="chat-msg-content">
+                                        <div class="chat-msg-name" style="color: var(--accent-green);">Критик</div>
+                                        <div class="chat-msg-text">Проверил КП: ✓ цены актуальны ✓ наличие подтверждено ✓ контакты корректны. Одобряю отправку.</div>
+                                        <div class="chat-msg-time">23:49</div>
+                                    </div>
+                                </div>
+
+                                <div class="chat-msg-system" style="color: var(--accent-green);">✓ КП отправлено клиенту</div>
+
+                                <div class="chat-msg-system">+3 часа</div>
+
+                                <div class="chat-msg">
+                                    <div class="chat-msg-avatar" style="background: var(--accent-red);">Q</div>
+                                    <div class="chat-msg-content">
+                                        <div class="chat-msg-name" style="color: var(--accent-red);">Квалификатор</div>
+                                        <div class="chat-msg-text">Клиент открыл КП (2 раза). Не ответил. Пингую follow-up через WhatsApp.</div>
+                                        <div class="chat-msg-time">02:51</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="chat-typing">
+                                <div class="typing-dots">
+                                    <span></span><span></span><span></span>
+                                </div>
+                                <span>Писатель готовит follow-up...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 15: Future - AGI 2030 -->
+        <section class="slide" id="slide-15" style="background: linear-gradient(rgba(10,10,15,0.85), rgba(10,10,30,0.9));">
+            <div class="slide-header">
+                <span class="logo"><svg class="logo-svg" viewBox="0 0 160 22" height="20"><text x="0" y="17" font-family="Inter, sans-serif" font-weight="700" font-size="16" fill="white">auto.ru бизнес</text></svg></span>
+            </div>
+            <div class="slide-content">
+                <div class="two-col">
+                    <div>
+                        <div class="cover-badge" style="background: rgba(6, 182, 212, 0.15); border-color: rgba(6, 182, 212, 0.3); color: var(--accent-cyan);">ГОРИЗОНТ ~2030</div>
+                        <h2>AGI: как <span class="highlight-cyan">J.A.R.V.I.S.</span></h2>
+                        <p><strong>Artificial General Intelligence</strong> — AI-помощник как в «Железном человеке»: понимает контекст, действует автономно, решает любые задачи</p>
+
+                        <div style="margin-top: 24px; font-size: 14px; color: var(--gray-light);">
+                            <strong style="color: white;">Что это значит для дилеров:</strong>
+                        </div>
+
+                        <div style="margin-top: 16px; display: flex; flex-direction: column; gap: 12px;">
+                            <div style="display: flex; align-items: flex-start; gap: 12px; padding: 14px; background: var(--bg-card); border-radius: 12px; border-left: 3px solid var(--accent-cyan);">
+                                <div style="font-size: 20px;">🚗</div>
+                                <div>
+                                    <div style="font-weight: 600; font-size: 13px; margin-bottom: 4px;">Полная автоматизация продаж</div>
+                                    <div style="font-size: 12px; color: var(--gray-light);">AI ведёт клиента от первого контакта до сделки</div>
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: flex-start; gap: 12px; padding: 14px; background: var(--bg-card); border-radius: 12px; border-left: 3px solid var(--accent-purple);">
+                                <div style="font-size: 20px;">🔧</div>
+                                <div>
+                                    <div style="font-weight: 600; font-size: 13px; margin-bottom: 4px;">Предиктивный сервис</div>
+                                    <div style="font-size: 12px; color: var(--gray-light);">AI предсказывает поломки до их возникновения</div>
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: flex-start; gap: 12px; padding: 14px; background: var(--bg-card); border-radius: 12px; border-left: 3px solid var(--accent-green);">
+                                <div style="font-size: 20px;">📊</div>
+                                <div>
+                                    <div style="font-weight: 600; font-size: 13px; margin-bottom: 4px;">Автономное управление</div>
+                                    <div style="font-size: 12px; color: var(--gray-light);">AI сам оптимизирует цены, закупки, маркетинг</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <!-- JARVIS-style visualization -->
+                        <div style="position: relative; height: 100%; display: flex; align-items: center; justify-content: center;">
+                            <div style="width: 300px; height: 300px; border-radius: 50%; background: radial-gradient(circle, rgba(6, 182, 212, 0.1) 0%, transparent 70%); display: flex; align-items: center; justify-content: center; position: relative;" class="floating">
+                                <!-- Inner glow circle -->
+                                <div style="width: 200px; height: 200px; border-radius: 50%; border: 2px solid rgba(6, 182, 212, 0.3); display: flex; align-items: center; justify-content: center; position: relative;">
+                                    <div style="width: 120px; height: 120px; border-radius: 50%; background: linear-gradient(135deg, rgba(6, 182, 212, 0.2), rgba(139, 92, 246, 0.2)); display: flex; align-items: center; justify-content: center; border: 1px solid rgba(6, 182, 212, 0.4);">
+                                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--accent-cyan)" stroke-width="1.5">
+                                            <circle cx="12" cy="12" r="3"></circle>
+                                            <path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"></path>
+                                        </svg>
+                                    </div>
+                                    <!-- Orbiting dots -->
+                                    <div style="position: absolute; width: 12px; height: 12px; background: var(--accent-cyan); border-radius: 50%; top: 10px; left: 50%; transform: translateX(-50%);"></div>
+                                    <div style="position: absolute; width: 8px; height: 8px; background: var(--accent-purple); border-radius: 50%; bottom: 20px; right: 20px;"></div>
+                                    <div style="position: absolute; width: 10px; height: 10px; background: var(--accent-green); border-radius: 50%; bottom: 30px; left: 15px;"></div>
+                                </div>
+                            </div>
+                            <div style="position: absolute; bottom: 0; text-align: center; width: 100%;">
+                                <div style="font-size: 13px; color: var(--accent-cyan); font-weight: 600;">«Добрый день, сэр. Чем могу помочь?»</div>
+                                <div style="font-size: 11px; color: var(--gray-light); margin-top: 4px;">— J.A.R.V.I.S., Iron Man</div>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 20px; display: flex; gap: 12px; justify-content: center;">
+                            <div style="padding: 8px 16px; background: var(--bg-card); border-radius: 8px; font-size: 12px;">
+                                <span style="color: var(--accent-red); font-weight: 700;">2026</span>
+                                <span style="color: var(--gray-light); margin-left: 8px;">xAI</span>
+                            </div>
+                            <div style="padding: 8px 16px; background: var(--bg-card); border-radius: 8px; font-size: 12px;">
+                                <span style="color: var(--accent-orange); font-weight: 700;">2027</span>
+                                <span style="color: var(--gray-light); margin-left: 8px;">Anthropic</span>
+                            </div>
+                            <div style="padding: 8px 16px; background: var(--bg-card); border-radius: 8px; font-size: 12px;">
+                                <span style="color: var(--accent-green); font-weight: 700;">2030</span>
+                                <span style="color: var(--gray-light); margin-left: 8px;">Google</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE: Dealers Table (перемещён) -->
+        <section class="slide" id="slide-dealers">
+            <div class="slide-header">
+                <span class="logo"><svg class="logo-svg" viewBox="0 0 160 22" height="20"><text x="0" y="17" font-family="Inter, sans-serif" font-weight="700" font-size="16" fill="white">auto.ru бизнес</text></svg></span>
+            </div>
+            <div class="slide-content">
+                <h2 style="margin-bottom: 16px;">Что используют дилеры <span class="highlight">сегодня</span></h2>
+                <div style="display: flex; gap: 24px; margin-bottom: 24px;">
+                    <div style="display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--gray-light);">
+                        <span class="tool-badge tool-analytics" style="font-size: 11px;">AI-триггеры</span>
+                        <span>= автоматические события по условиям (цена упала, конкурент обновил)</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--gray-light);">
+                        <span class="tool-badge tool-analytics" style="font-size: 11px;">AI-робот</span>
+                        <span>= автоответчик + квалификация лидов 24/7</span>
+                    </div>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 50px;">№</th>
+                                <th style="width: 160px;">Холдинг</th>
+                                <th>Звонки</th>
+                                <th>Описания авто</th>
+                                <th>Креативы (генерация картинок)</th>
+                                <th>Аналитика</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="text-align: center; font-weight: 700; color: var(--accent-red);">1</td>
+                                <td><strong>Холдинг 1</strong></td>
+                                <td><span class="tool-badge tool-autoru"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> Авто.ру AI</span></td>
+                                <td><span class="tool-badge tool-gpt">GPT-4</span></td>
+                                <td><span class="tool-badge tool-design">Баннеры</span></td>
+                                <td>—</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: center; font-weight: 700; color: var(--accent-red);">2</td>
+                                <td><strong>Холдинг 2</strong></td>
+                                <td><span class="tool-badge tool-autoru"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> Авто.ру AI</span></td>
+                                <td><span class="tool-badge tool-gpt">GPT</span></td>
+                                <td>—</td>
+                                <td>—</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: center; font-weight: 700; color: var(--accent-red);">3</td>
+                                <td><strong>Холдинг 3</strong></td>
+                                <td><span class="tool-badge tool-gpt">4Пикселя</span></td>
+                                <td><span class="tool-badge tool-gpt">GPT</span></td>
+                                <td><span class="tool-badge tool-design">Баннеры</span></td>
+                                <td><span class="tool-badge tool-analytics">AI-триггеры</span></td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: center; font-weight: 700; color: var(--accent-red);">4</td>
+                                <td><strong>Холдинг 4</strong></td>
+                                <td><span class="tool-badge tool-autoru"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> Авто.ру AI</span></td>
+                                <td><span class="tool-badge tool-gpt">GPT</span></td>
+                                <td>—</td>
+                                <td><span class="tool-badge tool-analytics">AI-робот</span></td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: center; font-weight: 700; color: var(--accent-red);">5</td>
+                                <td><strong>Холдинг 5</strong></td>
+                                <td><span class="tool-badge tool-autoru"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> Авто.ру AI</span></td>
+                                <td><span class="tool-badge tool-gpt">GPT</span></td>
+                                <td><span class="tool-badge tool-design">Баннеры</span></td>
+                                <td><span class="tool-badge tool-analytics">Конкуренты</span></td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: center; font-weight: 700; color: var(--accent-red);">6</td>
+                                <td><strong>Холдинг 6</strong></td>
+                                <td><span class="tool-badge tool-autoru"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> Авто.ру AI</span></td>
+                                <td>—</td>
+                                <td><span class="tool-badge tool-design">Баннеры</span></td>
+                                <td><span class="tool-badge tool-analytics">Регионы</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 10: Final - 3 Steps -->
+        <section class="slide slide-final" id="slide-16" style="background: linear-gradient(rgba(10,10,15,0.88), rgba(15,10,26,0.92)), url('https://gen.krea.ai/images/5866f3a9-2fa5-4210-b312-656122912ff8.png') center/cover;">
+            <div class="slide-header">
+                <span class="logo"><svg class="logo-svg" viewBox="0 0 160 22" height="20"><text x="0" y="17" font-family="Inter, sans-serif" font-weight="700" font-size="16" fill="white">auto.ru бизнес</text></svg></span>
+            </div>
+            <div class="slide-content" style="text-align: center;">
+                <h1 style="font-size: 52px;">Окно возможностей: <span class="highlight">2026</span></h1>
+                <p style="font-size: 20px; color: white; max-width: 700px; margin: 0 auto;">AI — это инструмент, доступный каждому.<br>Вот как начать внедрение уже сейчас:</p>
+
+                <div class="step-cards">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <div class="step-icon" style="background: rgba(230, 57, 70, 0.15);">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#E63946" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                        </div>
+                        <h3 style="font-size: 17px; margin-bottom: 12px;">Создайте рабочую группу</h3>
+                        <p style="font-size: 14px;">Соберите команду энтузиастов. Пусть изучают AI с нуля и набирают компетенцию</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <div class="step-icon" style="background: rgba(139, 92, 246, 0.15);">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                        </div>
+                        <h3 style="font-size: 17px; margin-bottom: 12px;">Опишите все процессы</h3>
+                        <p style="font-size: 14px;">Задокументируйте процессы в текстовом и схематичном виде. Найдите точки разрыва и лишние шаги</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <div class="step-icon" style="background: rgba(6, 182, 212, 0.15);">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#06B6D4" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                        </div>
+                        <h3 style="font-size: 17px; margin-bottom: 12px;">Запустите AI-агента</h3>
+                        <p style="font-size: 14px;">Скормите описания AI, проанализируйте вместе, спросите: «Как оптимизировать?»</p>
+                    </div>
+                </div>
+
+                <p style="font-size: 14px; color: var(--gray-light); margin-top: 40px;">Кто начнёт сейчас — получит 3-5 лет преимущества</p>
+            </div>
+        </section>
+
+    </div>
+
+    <nav class="nav" id="nav"></nav>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const container = document.getElementById('slides');
+        const nav = document.getElementById('nav');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const slideCounter = document.getElementById('slideCounter');
+        const progressBar = document.getElementById('progressBar');
+        const sectionTabs = document.querySelectorAll('.section-tab');
+
+        const sections = [
+            { start: 0, end: 2 },
+            { start: 3, end: 10 },
+            { start: 11, end: 16 }
+        ];
+
+        slides.forEach((slide, index) => {
+            const dot = document.createElement('div');
+            dot.className = 'nav-dot' + (index === 0 ? ' active' : '');
+            dot.addEventListener('click', () => goToSlide(index));
+            nav.appendChild(dot);
+        });
+
+        const dots = document.querySelectorAll('.nav-dot');
+
+        function updateUI() {
+            container.style.transform = `translateX(-${currentSlide * 100}vw)`;
+            dots.forEach((dot, i) => dot.classList.toggle('active', i === currentSlide));
+            slides.forEach((slide, i) => slide.classList.toggle('active', i === currentSlide));
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === totalSlides - 1;
+            slideCounter.textContent = `${currentSlide + 1} / ${totalSlides}`;
+            progressBar.style.width = `${((currentSlide + 1) / totalSlides) * 100}%`;
+
+            sectionTabs.forEach((tab, i) => {
+                const section = sections[i];
+                tab.classList.toggle('active', currentSlide >= section.start && currentSlide <= section.end);
+            });
+        }
+
+        function goToSlide(index) {
+            if (index >= 0 && index < totalSlides) {
+                currentSlide = index;
+                updateUI();
+            }
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) { currentSlide++; updateUI(); }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) { currentSlide--; updateUI(); }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'Enter') { e.preventDefault(); nextSlide(); }
+            else if (e.key === 'ArrowLeft' || e.key === 'Backspace') { e.preventDefault(); prevSlide(); }
+        });
+
+        let touchStartX = 0;
+        document.addEventListener('touchstart', (e) => touchStartX = e.changedTouches[0].screenX);
+        document.addEventListener('touchend', (e) => {
+            const diff = touchStartX - e.changedTouches[0].screenX;
+            if (Math.abs(diff) > 50) diff > 0 ? nextSlide() : prevSlide();
+        });
+
+        updateUI();
+
+        // Three.js Galaxy Animation
+        function initGalaxy() {
+            const canvas = document.getElementById('planet-canvas');
+            if (!canvas) return;
+
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+            // Stars
+            const starsGeometry = new THREE.BufferGeometry();
+            const starsCount = 3000;
+            const positions = new Float32Array(starsCount * 3);
+            for (let i = 0; i < starsCount * 3; i++) {
+                positions[i] = (Math.random() - 0.5) * 150;
+            }
+            starsGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            const starsMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.08, transparent: true, opacity: 0.7 });
+            const stars = new THREE.Points(starsGeometry, starsMaterial);
+            scene.add(stars);
+
+            // Timeline planets
+            const colors = [0x4A90D9, 0x8B5CF6, 0xF59E0B, 0x06B6D4, 0xE63946, 0xFFD700];
+            const planetPositions = [
+                { x: -7.5, y: 0, z: -8 },
+                { x: -4.5, y: 0.5, z: -6 },
+                { x: -1.5, y: 0, z: -5 },
+                { x: 1.5, y: -0.5, z: -6 },
+                { x: 4.5, y: 0, z: -7 },
+                { x: 7.5, y: 0.5, z: -8 }
+            ];
+
+            const planets = [];
+            const rings = [];
+
+            planetPositions.forEach((pos, i) => {
+                const isAGI = i === 5; // Last planet is AGI
+                const size = isAGI ? 0.9 : 0.35 + i * 0.08;
+                const geometry = new THREE.SphereGeometry(size, 32, 32);
+                const material = new THREE.MeshBasicMaterial({ color: colors[i] });
+                const planet = new THREE.Mesh(geometry, material);
+                planet.position.set(pos.x, pos.y, pos.z);
+                scene.add(planet);
+                planets.push(planet);
+
+                // Glow effect for AGI planet
+                if (isAGI) {
+                    const glowGeometry = new THREE.SphereGeometry(size * 1.3, 32, 32);
+                    const glowMaterial = new THREE.MeshBasicMaterial({ color: 0xFFD700, transparent: true, opacity: 0.15 });
+                    const glow = new THREE.Mesh(glowGeometry, glowMaterial);
+                    glow.position.copy(planet.position);
+                    scene.add(glow);
+                }
+
+                // Ring
+                const ringSize = isAGI ? 1.4 : 0.5 + i * 0.12;
+                const ringGeometry = new THREE.TorusGeometry(ringSize, 0.03, 16, 100);
+                const ringMaterial = new THREE.MeshBasicMaterial({ color: colors[i], transparent: true, opacity: isAGI ? 0.6 : 0.4 });
+                const ring = new THREE.Mesh(ringGeometry, ringMaterial);
+                ring.rotation.x = Math.PI / 2.5;
+                ring.position.copy(planet.position);
+                scene.add(ring);
+                rings.push(ring);
+            });
+
+            // Connecting line
+            const lineMaterial = new THREE.LineBasicMaterial({ color: 0xE63946, transparent: true, opacity: 0.3 });
+            const linePoints = planetPositions.map(p => new THREE.Vector3(p.x, p.y, p.z));
+            const lineGeometry = new THREE.BufferGeometry().setFromPoints(linePoints);
+            const line = new THREE.Line(lineGeometry, lineMaterial);
+            scene.add(line);
+
+            camera.position.z = 5;
+
+            function animate() {
+                requestAnimationFrame(animate);
+                stars.rotation.y += 0.0001;
+                planets.forEach((planet, i) => {
+                    planet.rotation.y += 0.003 + i * 0.001;
+                });
+                rings.forEach((ring, i) => {
+                    ring.rotation.z += 0.002 + i * 0.0005;
+                });
+                renderer.render(scene, camera);
+            }
+
+            animate();
+
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        }
+
+        window.addEventListener('load', initGalaxy);
+    </script>
+</body>
+</html>
